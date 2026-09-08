@@ -1,0 +1,320 @@
+[gd_scene format=3 uid="uid://c045ap3nlk2bp"]
+
+[ext_resource type="Script" uid="uid://cb623d1ygy3y7" path="res://main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://maveli_character.tscn" id="2_maveli"]
+
+[sub_resource type="Environment" id="Environment_warm"]
+background_mode = 1
+background_color = Color(0.55, 0.78, 0.96, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 0.92, 0.75, 1)
+ambient_light_energy = 0.65
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
+radius = 0.35
+height = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_player"]
+albedo_color = Color(0.97, 0.92, 0.8, 1)
+roughness = 0.85
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+radius = 0.4
+height = 0.9
+
+[sub_resource type="SphereMesh" id="Sphere_trail"]
+radius = 0.08
+height = 0.16
+
+[sub_resource type="StyleBoxFlat" id="StyleBarBg"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.05, 0.06, 0.09, 0.8)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBarFill"]
+bg_color = Color(1, 0.82, 0.2, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Main" type="Node3D" unique_id=1900759037]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1591779849]
+environment = SubResource("Environment_warm")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=455752005]
+transform = Transform3D(0.8660254, -0.43301272, 0.24999999, 0, 0.49999997, 0.86602545, -0.5, -0.75, 0.43301266, 0, 0, 0)
+light_color = Color(1, 0.93, 0.8, 1)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Ground" type="Node3D" parent="." unique_id=1592913991]
+
+[node name="Obstacles" type="Node3D" parent="." unique_id=505248589]
+
+[node name="Pickups" type="Node3D" parent="." unique_id=2133405180]
+
+[node name="ChimePlayer" type="AudioStreamPlayer" parent="." unique_id=-1294967295]
+volume_db = -8.0
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1371030491]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
+
+[node name="Collision" type="CollisionShape3D" parent="Player" unique_id=336626570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape_player")
+
+[node name="Mesh" type="Node3D" parent="Player" unique_id=821691377]
+
+[node name="Maveli" parent="Player/Mesh" instance=ExtResource("2_maveli")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Trail" type="CPUParticles3D" parent="Player" unique_id=-1294967294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+amount = 24
+lifetime = 0.6
+mesh = SubResource("Sphere_trail")
+direction = Vector3(0, 0, 1)
+spread = 24.0
+gravity = Vector3(0, -0.6, 0)
+initial_velocity_min = 0.4
+initial_velocity_max = 1.2
+scale_amount_min = 0.12
+scale_amount_max = 0.3
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=1502898253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 6)
+
+[node name="CameraYaw" type="Node3D" parent="CameraRig" unique_id=972517095]
+
+[node name="CameraPitch" type="Node3D" parent="CameraRig/CameraYaw" unique_id=319349240]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/CameraYaw/CameraPitch" unique_id=760605639]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.4)
+current = true
+fov = 72.0
+near = 0.1
+far = 900.0
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1626985573]
+
+[node name="UI" type="Control" parent="HUD" unique_id=1960962348]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HeartsTitle" type="Label" parent="HUD/UI" unique_id=2145012169]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "HEARTS"
+
+[node name="Heart0" type="Label" parent="HUD/UI" unique_id=455338775]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 34.0
+offset_right = 66.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(0.95, 0.16, 0.16, 1)
+theme_override_font_sizes/font_size = 40
+text = "O"
+horizontal_alignment = 1
+
+[node name="Heart1" type="Label" parent="HUD/UI" unique_id=1216770557]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 34.0
+offset_right = 112.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(0.95, 0.16, 0.16, 1)
+theme_override_font_sizes/font_size = 40
+text = "O"
+horizontal_alignment = 1
+
+[node name="Heart2" type="Label" parent="HUD/UI" unique_id=458235965]
+layout_mode = 0
+offset_left = 108.0
+offset_top = 34.0
+offset_right = 158.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(0.95, 0.16, 0.16, 1)
+theme_override_font_sizes/font_size = 40
+text = "O"
+horizontal_alignment = 1
+
+[node name="UmbrellaTitle" type="Label" parent="HUD/UI" unique_id=359590776]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 8.0
+offset_right = 90.0
+offset_bottom = 30.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 0.9)
+theme_override_font_sizes/font_size = 14
+text = "UMBRELLA"
+horizontal_alignment = 1
+
+[node name="UmbrellaBar" type="ProgressBar" parent="HUD/UI" unique_id=1178825464]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -135.0
+offset_top = 34.0
+offset_right = 135.0
+offset_bottom = 56.0
+grow_horizontal = 2
+theme_override_styles/background = SubResource("StyleBarBg")
+theme_override_styles/fill = SubResource("StyleBarFill")
+show_percentage = false
+
+[node name="DistanceLabel" type="Label" parent="HUD/UI" unique_id=1208938040]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -340.0
+offset_top = 16.0
+offset_right = -14.0
+offset_bottom = 48.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.95, 0.78, 1)
+theme_override_font_sizes/font_size = 28
+text = "Distance 0 m"
+horizontal_alignment = 2
+
+[node name="HintLabel" type="Label" parent="HUD/UI" unique_id=1106781434]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -70.0
+offset_right = 360.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 15
+text = "A / D or arrows: lane    Space / Up: jump    R: restart    Touch: swipe lane, tap jump"
+horizontal_alignment = 1
+
+[node name="GameOver" type="Control" parent="HUD/UI" unique_id=1879398951]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dim" type="ColorRect" parent="HUD/UI/GameOver" unique_id=828095414]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.01, 0.06, 0.78)
+
+[node name="TitleLabel" type="Label" parent="HUD/UI/GameOver" unique_id=113283991]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -150.0
+offset_right = 320.0
+offset_bottom = -66.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
+theme_override_font_sizes/font_size = 64
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="HUD/UI/GameOver" unique_id=267233016]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -36.0
+offset_right = 320.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 28
+text = "Distance climbed: 0 m"
+horizontal_alignment = 1
+
+[node name="BestScoreLabel" type="Label" parent="HUD/UI/GameOver" unique_id=-1294967292]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = 6.0
+offset_right = 320.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.6, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "Best: 0 m"
+horizontal_alignment = 1
+
+[node name="RestartHintLabel" type="Label" parent="HUD/UI/GameOver" unique_id=251736548]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = 44.0
+offset_right = 320.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.95)
+theme_override_font_sizes/font_size = 22
+text = "Press R or Tap to restart"
+horizontal_alignment = 1
+
+[node name="Popups" type="Control" parent="HUD/UI" unique_id=-1294967293]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HitFlash" type="ColorRect" parent="HUD/UI" unique_id=1309063978]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.9, 0.12, 0.08, 0)
